@@ -24,11 +24,21 @@ public class ArticoloController {
         return articoli;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/details/{id}")
     public ResponseEntity<Articolo> getArticoloById(@PathVariable String id) {
         List<Articolo> articoli = getArticoli(); // Richiama il metodo esistente
         return articoli.stream()
             .filter(articolo -> articolo.getId().equals(id))
+            .findFirst()
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/categoria/{categoria}")
+    public ResponseEntity<Articolo> getArticoloBycategoria(@PathVariable String categoria) {
+        List<Articolo> articoli = getArticoli(); 
+        return articoli.stream()
+            .filter(articolo -> articolo.getCategoria().equals(categoria))
             .findFirst()
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
